@@ -2,7 +2,7 @@ from gpgservice import GPGService
 
 gpgService = GPGService()
 
-# gpgService.createKeys('test1@gmail.com')
+gpgService.createKeys('test1@gmail.com')
 
 # gpgService.createKeys('test2@gmail.com')
 
@@ -21,7 +21,7 @@ gpgService = GPGService()
 # gpgService.removeKey('test1@gmail.com')
 
 
-gpgService.savePublicKeyToFile('test2@gmail.com')
+# gpgService.savePublicKeyToFile('test2@gmail.com')
 # gpgService.importPublicKeyFromFile('test2@gmail.com.asc','test2@gmail.com')
 
 gpgService.printAllKeys()

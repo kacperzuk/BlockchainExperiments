@@ -1,15 +1,18 @@
 import gnupg
 import json
 import pprint
+import os
 
 class GPGService:
 
 	def __init__(self):
 		super(GPGService, self).__init__()
 		self.gpg = gnupg.GPG(gnupghome ='homegpg')
-
-		with open('keys.json','r') as dataFile: 
-			self.keysFp = json.load(dataFile)
+		with open('keys.json','a+') as dataFile:
+			if os.stat('keys.json').st_size is not 0:
+				self.keysFp = json.load(dataFile)
+			else:
+				self.keysFp = {}
 
 	def createKeys(self, domain):
 		self.inputData = self.gpg.gen_key_input(
