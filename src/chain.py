@@ -1,7 +1,6 @@
 #!/usr/bin/env python3 -bb
 
 import pickle
-from pprint import pprint
 import rethinkdb as r
 from bigchaindb import Bigchain, crypto, util
 
@@ -75,6 +74,7 @@ if __name__ == "__main__":
     pprint(b.check_messages())
     print("Pushing new message...")
     b.push_message({"HI": "HO"})
+    from pprint import pprint
     import time
     time.sleep(5)
     print("New messages:")
