@@ -1,1 +1,4 @@
 rethinkdb_data/
+src/homegpg/
+src/__pycache__
+src/exported_keys/
