@@ -1,69 +1,54 @@
-import gnupg
-import json
-import pprint
-import os
+import gnupg  
+import re
 
 class GPGService:
 
 	def __init__(self):
-		super(GPGService, self).__init__()
-		self.gpg = gnupg.GPG(gnupghome ='homegpg')
-		with open('keys.json','a+') as dataFile:
-			if os.stat('keys.json').st_size is not 0:
-				self.keysFp = json.load(dataFile)
-			else:
-				self.keysFp = {}
+		self.gpg = gnupg.GPG(gnupghome = 'homegpg')
+		self.gpg.encoding = 'utf-8'
 
-	def createKeys(self, domain):
-		self.inputData = self.gpg.gen_key_input(
-				name_email = domain,
-				passphrase = 'password')
+	def generate_keys(self, uuid):
+		 self.gpg.gen_key(self.gpg.gen_key_input(name_email = uuid))
 
-		key = self.gpg.gen_key(self.inputData)
+	def get_public_key(self, uuid):
+		return self.gpg.export_keys(uuid)
 
-		self.keysFp[domain] = key.fingerprint
-		self.updateKeysFpFile()
+	def add_conversation(self, uuid, public_key):
+		import_result = self.gpg.import_keys(public_key)
+		if bool(import_result.results[0]['ok']):
+			return True
+		else:
+			return False
 
-	def encodeMessage(self, message, senderDomain):
-		return str(self.gpg.encrypt(message, senderDomain))
+	def encrypt_message(self, message, uuid):
+		message_params = {}
+		message_params['data'] = message
+		message_params['fingerprint'] = self._get_fingerprint_for_key(uuid)
+		return self.gpg.encrypt(str(message_params), uuid)
 
-	def decodeMessage(self, message):
-		decryptedData = self.gpg.decrypt(message, passphrase ='password')
-		return decryptedData.ok
+	def decrypt_message(self, encrypted):
+		result = {}
+		decrypted_data = self.gpg.decrypt(str(encrypted))
+		decrypted_data = eval(str(decrypted_data))
+		result['data'] = decrypted_data['data']
+		result['uuid'] = self._get_uuid_from_key(decrypted_data['fingerprint'])
+		return result
 
-	def printAllKeys(self):
-		publicKeys = self.gpg.list_keys()
-		privateKeys = self.gpg.list_keys(True)
+	def _get_uuid_from_key(self, fingerprint):
+		public_keys = self.gpg.list_keys()
+		for key in public_keys:
+			if fingerprint in key['fingerprint']:
+				result = re.search('<(.*?)>',key['uids'][0])
+				return result.group(1)
 
-		pprint.pprint(publicKeys)
-		pprint.pprint(privateKeys)
-
-
-	def removeKey(self, domain):
-		print(str(self.gpg.delete_keys(self.keysFp[domain], True)))
-		print(str(self.gpg.delete_keys(self.keysFp[domain])))
-		self.keysFp.pop(domain)
-		self.updateKeysFpFile()
-
-	def savePublicKeyToFile(self, domain):
-		publickKey = self.gpg.export_keys(self.keysFp[domain])
-		filePath = 'exported_keys/' + domain + '.asc'
-		with open(filePath,'w') as inputFile:
-			inputFile.write(publickKey)
-		return filePath
-
-	def importPublicKeyFromFile(self, filePath, domain):
-		keyData = open(filePath,'r').read()
-		importResult = self.gpg.import_keys(keyData)
-
-		print('imported:')
-		pprint.pprint(importResult.fingerprints)
-
-		if not importResult.fingerprints :
-			self.keysFp[domain] = importResult.fingerprints[1]
-			self.updateKeysFpFile()
+	def _get_fingerprint_for_key(self, uuid):
+		public_keys = self.gpg.list_keys()
+		for key in public_keys:
+			if uuid in key['uids'][0]:
+				return key['fingerprint']
 
 
-	def updateKeysFpFile(self):
-		with open('keys.json', 'w') as outfile:
-			json.dump(self.keysFp, outfile)
+
+
+
+

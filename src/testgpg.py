@@ -2,26 +2,16 @@ from gpgservice import GPGService
 
 gpgService = GPGService()
 
-gpgService.createKeys('test1@gmail.com')
+# gpgService.generate_keys('test2')
 
-# gpgService.createKeys('test2@gmail.com')
+# message = gpgService.encrypt_message('testowa wiadomosc','test2')
 
-# message = gpgService.encodeMessage('testowa wiadomosc','test2@gmail.com')
+# print(message)
 
-# decryptedStatus = gpgService.decodeMessage(message)
+# decrypted = gpgService.decrypt_message(message)
 
-# print ('ok: ', decryptedStatus)
-# print ('status: ', decrypted.status)
-# print ('stderr: ', decrypted.stderr)
-# print ('decrypted string: ', decrypted.data)
+# print(decrypted['data'])
+# print('\n uuid :\n')
+# print(decrypted['uuid'])
 
-
-
-# gpgService.removeKey('test2@gmail.com')
-# gpgService.removeKey('test1@gmail.com')
-
-
-# gpgService.savePublicKeyToFile('test2@gmail.com')
-# gpgService.importPublicKeyFromFile('test2@gmail.com.asc','test2@gmail.com')
-
-gpgService.printAllKeys()
+key = gpgService.get_public_key('test2')
