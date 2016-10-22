@@ -15,10 +15,7 @@ class GPGService:
 
 	def add_conversation(self, uuid, public_key):
 		import_result = self.gpg.import_keys(public_key)
-		if bool(import_result.results[0]['ok']):
-			return True
-		else:
-			return False
+		return bool(import_result.results[0]['ok'])
 
 	def encrypt_message(self, message, uuid):
 		message_params = {}
