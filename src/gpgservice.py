@@ -20,7 +20,7 @@ class GPGService:
 	def encrypt_message(self, message, uuid):
 		message_params = {}
 		message_params['data'] = message
-		message_params['fingerprint'] = self._get_fingerprint_for_key(uuid)
+		message_params['fingerprint'] = self._get_fingerprint_from_key(uuid)
 		return self.gpg.encrypt(str(message_params), uuid)
 
 	def decrypt_message(self, encrypted):
