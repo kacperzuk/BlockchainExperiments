@@ -38,7 +38,7 @@ class GPGService:
 				result = re.search('<(.*?)>',key['uids'][0])
 				return result.group(1)
 
-	def _get_fingerprint_for_key(self, uuid):
+	def _get_fingerprint_from_key(self, uuid):
 		public_keys = self.gpg.list_keys()
 		for key in public_keys:
 			if uuid in key['uids'][0]:
