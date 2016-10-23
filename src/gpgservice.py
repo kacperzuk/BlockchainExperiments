@@ -14,7 +14,7 @@ class GPGService:
 	def get_public_key(self, uuid):
 		return self.gpg.export_keys(uuid)
 
-	def add_conversation(self, uuid, public_key):
+	def add_conversation(self, public_key):
 		import_result = self.gpg.import_keys(public_key)
 		return bool(import_result.results[0]['ok'])	
 
