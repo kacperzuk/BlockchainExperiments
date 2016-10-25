@@ -1,7 +1,7 @@
-drop table contacts;
+drop table if exists contacts;
 
 create table contacts(
-	id	int primary key,
+	id	integer primary key autoincrement,
 	name	text				not null,
 	key 	text				not null
 	);
