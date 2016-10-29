@@ -6,14 +6,18 @@
 	</head>
 	<body>
 	<p>Your message:</p>
-		<form action='main.html' method='POST'>
-			<input type="text" name="snd_message" size="50">
+		<form action='{{ url_for('client') }}' method='POST'>
+			<textarea name=text rows=5 cols=40></textarea>
 			<p>To:
+				{% block body %}
 				<select>
-  					<option value="contact_1">Contact 1</option>
-  					<option value="contact_2">Contact 2</option>
-  					<option value="contact_3">Contact 3</option>
+				    {% for i in names %}
+  					<option value="{{ i.name }}">{{ i.name|safe }}</option>
+  					{% else %}
+					<li><em>Unbelievable.  No entries here so far</em></li>
+  					{% endfor %}
 				</select>
+				{% endblock %}
 			</p>		
 			  <button type='submit'>Send message</button>
 		</form>
