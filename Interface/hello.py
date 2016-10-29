@@ -16,10 +16,6 @@ def hello(name=None):
 def main():
     return render_template('main.html')
 
-@app.route('/contact_form')
-def client():
-	return render_template('contact_form.html')
-
 @app.route('/rcv_form')
 def recive():
 	return render_template('rcv_form.html')
@@ -77,16 +73,32 @@ def show_names():
     names = cur.fetchall()
     return render_template('snd_form.html', names=names)
 
+#@app.route('/contact_form', methods=['POST'])
+#def add_name():
+#    db = get_db()
+#    db.execute('insert into contacts( name ) values (?)', request.form['contact_name']])
+#    db.commit()
+#    flash('New entry was successfully posted')
+#  # return redirect(url_for('show_names'))
+#    return render_template('contact_form.html')
 
 
+@app.route('/contact_form')
+def add_name():
+	return render_template('contact_form.html')
 
+@app.route('/',methods = ['POST', 'GET'])
+def addrec():
+   	if request.method == 'POST':
 
-#@app.route('/snd_form')
-#def send():
-#	return render_template('snd_form.html')
-
-
-
+   		contact_name = request.form['contact_name']
+   		fingerprint = request.form['fingerprint']
+        
+       	with sqlite3.connect("contacts.db") as con:
+          	cur = con.cursor()
+           	cur.execute("INSERT INTO contacts (name, fingerprint) VALUES (?, ?)",(contact_name,fingerprint) )
+       	con.commit()
+       	return render_template('main.html')
 
 if __name__ == "__main__":
     app.run()

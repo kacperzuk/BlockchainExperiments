@@ -6,7 +6,7 @@
 	</head>
 	<body>
 	<p>Your message:</p>
-		<form action='{{ url_for('client') }}' method='POST'>
+		<form action='{{ url_for('main') }}' method='POST'>
 			<textarea name=text rows=5 cols=40></textarea>
 			<p>To:
 				{% block body %}
