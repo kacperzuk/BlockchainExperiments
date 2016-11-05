@@ -8,15 +8,15 @@
 		<form action='{{ url_for('addrec') }}' method='POST'>
 		
 		<p>Contact name:
-			<input type="text" name="contact_name">
+			<input type="text" name="contact_name" required="required">
 		</p>
 		<p>Contact's public key:
-			<input type="text" name="fingerprint">
+			<input type="text" name="fingerprint" required="required">
 		</p>
 		<p>
 			<button type='submit'>Add contact</button>
 		</p>
-		
+
 		</form>
 	</body>
 </html>
