@@ -5,11 +5,28 @@ from connectors import get_db, get_chain, get_gpg
 
 @app.route("/")
 def main():
-    return render_template("main.html")
+    db = get_db()
+    fingerprint = db.execute("select value from settings where name = 'pubkey'").fetchall()
+    if not fingerprint:
+        query = "insert into settings (name, value) VALUES ('pubkey', ?)"
+        fingerprint = get_gpg().generate_key_pair()
+        if not fingerprint:
+            print(fingerprint)
+            return "wtf"
+        db.execute(query, (fingerprint,))
+        db.commit()
+    else:
+        fingerprint = fingerprint[0][0]
+
+    my_pub_key = get_gpg().get_public_key(fingerprint)
+    return render_template("main.html", pkey=my_pub_key)
 
 @app.route("/rcv_form")
 def receive():
-    return render_template("rcv_form.html")
+    chain_messages = [ m["message"] for m in get_chain().check_messages() ]
+    decrypted_messages = [ get_gpg().decrypt_message(m) for m in chain_messages ]
+    valid_messages = [ m for m in decrypted_messages if m ]
+    return render_template("rcv_form.html", messages=valid_messages)
 
 @app.route("/snd_form")
 def show_names():

@@ -1,3 +1,4 @@
+.*.swp
 rethinkdb_data/
 src/data/
 __pycache__/
