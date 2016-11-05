@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>main page</title>
+	</head>
+	<body>
+	<p>Your message:</p>
+		<form action='{{ url_for('send_message') }}' method='POST'>
+			<textarea name=text rows=5 cols=40></textarea>
+			<p>To:
+				{% block body %}
+				<select name=contact>
+				    {% for i in names %}
+  					<option value="{{ i.name }}">{{ i.name|safe }}</option>
+  					{% else %}
+					<li><em>Unbelievable.  No entries here so far</em></li>
+  					{% endfor %}
+				</select>
+				{% endblock %}
+			</p>		
+			  <button type='submit'>Send message</button>
+		</form>
+		</p>
+		<form method="GET" action="/rcv_form">
+		  <button type='submit'>Rcv form</button>
+		</form>
+	</body>
+</html>

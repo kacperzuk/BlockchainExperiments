@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>main page</title>
+	</head>
+	<body>
+		{% for m in messages %}
+		<p>Message:</p>
+		<p>
+		<textarea name=text rows=5 cols=40 disabled="">{{ m.data | safe }}</textarea>
+		</p>
+		<p>From:
+		<input type="text" name="rcv_name" value="{{ m.fingerprint }}" disabled>
+		</p>
+		<p>
+		<form method='GET' action='snd_form'>
+			  <button type='submit'>Send response</button>
+		</form>
+		</p>
+		{% endfor %}
+		<p>
+		<form method='GET' action='/'>
+			  <button type='submit'>Back to main page</button>
+		</form>
+		</p>
+	</body>
+</html>
