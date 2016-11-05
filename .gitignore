@@ -1,3 +1,4 @@
 rethinkdb_data/
+src/homegpg/
 __pycache__/
 last_block
