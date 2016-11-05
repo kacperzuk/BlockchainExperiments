@@ -2,6 +2,6 @@ drop table if exists contacts;
 
 create table contacts (
     id integer primary key autoincrement,
-    name text not null,
+    name text unique not null,
     fingerprint text	
 );

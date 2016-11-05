@@ -14,14 +14,15 @@ class GPGService:
         return self.gpg.export_keys(fingerprint)
 
     def add_contact(self, public_key):
-        import_result = self.gpg.import_keys(public_key)
+        import_result = self.gpg.import_keys(public_key.strip())
         return import_result.fingerprints[0]
 
     def encrypt_message(self, message, fingerprint):
         message_params = {}
         message_params['data'] = message
         message_params['fingerprint'] = fingerprint
-        return str(self.gpg.encrypt(json.dumps(message_params), fingerprint))
+        encrypted = self.gpg.encrypt(json.dumps(message_params), fingerprint, always_trust=True)
+        return str(encrypted)
 
     def decrypt_message(self, encrypted):
         decrypted_data = self.gpg.decrypt(encrypted)

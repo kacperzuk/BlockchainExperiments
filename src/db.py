@@ -1,5 +1,7 @@
 import sqlite3
+from flask import g
 from main import app
+from connectors import get_db
 
 def connect_db():
     """Connects to the specific database."""
@@ -18,14 +20,6 @@ def initdb_command():
     """Creates the database tables."""
     init_db()
     print('Initialized the database.')
-
-def get_db():
-    """Opens a new database connection if there is none yet for the
-    current application context.
-    """
-    if not hasattr(g, 'sqlite_db'):
-        g.sqlite_db = connect_db()
-    return g.sqlite_db
 
 @app.teardown_appcontext
 def close_db(error):

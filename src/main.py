@@ -1,9 +1,6 @@
 import os
 from flask import Flask
 
-from db import get_db
-import endpoints
-
 app = Flask(__name__)
 app.config.from_object(__name__)
 
@@ -12,6 +9,8 @@ app.config.update(dict(
     DEBUG=True
 ))
 app.config.from_envvar("FLASKR_SETTINGS", silent=True)
+
+from endpoints import *
 
 if __name__ == "__main__":
     app.run()

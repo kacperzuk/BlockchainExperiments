@@ -6,11 +6,11 @@
 	</head>
 	<body>
 	<p>Your message:</p>
-		<form action='{{ url_for('main') }}' method='POST'>
+		<form action='{{ url_for('send_message') }}' method='POST'>
 			<textarea name=text rows=5 cols=40></textarea>
 			<p>To:
 				{% block body %}
-				<select>
+				<select name=contact>
 				    {% for i in names %}
   					<option value="{{ i.name }}">{{ i.name|safe }}</option>
   					{% else %}

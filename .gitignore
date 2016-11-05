@@ -1,5 +1,3 @@
 rethinkdb_data/
 src/data/
 __pycache__/
-last_block
-data.db

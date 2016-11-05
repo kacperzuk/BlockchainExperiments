@@ -1,9 +1,7 @@
-from flask import render_template
-from main import app
+from flask import render_template, request, redirect, url_for
 
-@app.route("/")
-def hello(name=None):
-    return render_template("main.html", name=name)
+from main import app
+from connectors import get_db, get_chain, get_gpg
 
 @app.route("/")
 def main():
@@ -20,6 +18,25 @@ def show_names():
     names = cur.fetchall()
     return render_template("snd_form.html", names=names)
 
+@app.route("/snd_form", methods=("POST",))
+def send_message():
+    # get details
+    message = request.form["text"]
+    contact = request.form["contact"]
+
+    # get fingerprint for this contact
+    db = get_db()
+    cur = db.execute("select fingerprint from contacts where name = ?", (contact,))
+    fingerprint = cur.fetchall()[0][0]
+
+    # encrypt message
+    encrypted = get_gpg().encrypt_message(message, fingerprint)
+
+    # pass message to chain
+    get_chain().push_message(encrypted)
+
+    return redirect(url_for('show_names'))
+
 #@app.route("/contact_form", methods=["POST"])
 #def add_name():
 #    db = get_db()
@@ -33,12 +50,17 @@ def show_names():
 def add_name():
     return render_template("contact_form.html")
 
-@app.route("/", methods=("POST",))
+@app.route("/add_rec", methods=("POST",))
 def add_rec():
     contact_name = request.form["contact_name"]
-    fingerprint = request.form["fingerprint"]
-    cur = get_db().cursor()
-    query = "INSERT INTO contacts (name, fingerprint) VALUES (?, ?)"
-    cur.execute(query, (contact_name, fingerprint))
+    public_key = request.form["public_key"]
+    fingerprint = get_gpg().add_contact(public_key)
+    if not fingerprint:
+        return "Invalid public key!"
 
-    return render_template("main.html")
+    con = get_db()
+    query = "insert into contacts (name, fingerprint) values (?, ?)"
+    con.execute(query, (contact_name, fingerprint))
+    con.commit()
+
+    return redirect(url_for("main"))
