@@ -89,16 +89,14 @@ def add_name():
 
 @app.route('/',methods = ['POST', 'GET'])
 def addrec():
-   	if request.method == 'POST':
-
-   		contact_name = request.form['contact_name']
-   		fingerprint = request.form['fingerprint']
-        
-       	with sqlite3.connect("contacts.db") as con:
-          	cur = con.cursor()
-           	cur.execute("INSERT INTO contacts (name, fingerprint) VALUES (?, ?)",(contact_name,fingerprint) )
-       	con.commit()
-       	return render_template('main.html')
+  if request.method == 'POST':
+    contact_name = request.form['contact_name']
+    fingerprint = request.form['fingerprint']
+    with sqlite3.connect("contacts.db") as con:
+      cur = con.cursor()
+      cur.execute("INSERT INTO contacts (name, fingerprint) VALUES (?, ?)",(contact_name,fingerprint) )
+    con.commit()
+    return render_template('main.html')
 
 if __name__ == "__main__":
     app.run()
