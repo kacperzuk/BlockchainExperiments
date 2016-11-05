@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>main page</title>
+	</head>
+	<body>
+		<form action='{{ url_for('addrec') }}' method='POST'>
+		
+		<p>Contact name:
+			<input type="text" name="contact_name" required="required">
+		</p>
+		<p>Contact's public key:
+			<input type="text" name="fingerprint" required="required">
+		</p>
+		<p>
+			<button type='submit'>Add contact</button>
+		</p>
+
+		</form>
+	</body>
+</html>

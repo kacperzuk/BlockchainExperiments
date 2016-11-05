@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>main page</title>
+	</head>
+	<body>
+	<p>Your message:</p>
+		<form action='{{ url_for('main') }}' method='POST'>
+			<textarea name=text rows=5 cols=40></textarea>
+			<p>To:
+				{% block body %}
+				<select>
+				    {% for i in names %}
+  					<option value="{{ i.name }}">{{ i.name|safe }}</option>
+  					{% else %}
+					<li><em>Unbelievable.  No entries here so far</em></li>
+  					{% endfor %}
+				</select>
+				{% endblock %}
+			</p>		
+			  <button type='submit'>Send message</button>
+		</form>
+		</p>
+	</body>
+</html>
