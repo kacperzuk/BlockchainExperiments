@@ -1,6 +1,7 @@
 Start in root directory of repository:
 
 ```
+sudo apt-get install libffi-dev build-essential # or equivalent for your distro
 sudo pip3 install virtualenv # if you dont have it
 virtualenv env
 source env/bin/activate
