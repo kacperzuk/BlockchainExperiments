@@ -8,7 +8,7 @@ class MBigchain(Bigchain):
     def __init__(self):
         super(MBigchain, self).__init__()
         try:
-            with open('last_block', 'rb') as f:
+            with open('data/last_block', 'rb') as f:
                 self.last_block = pickle.load(f)
         except (FileNotFoundError,pickle.UnpicklingError,EOFError):
             self.last_block = None
@@ -35,7 +35,7 @@ class MBigchain(Bigchain):
 
     def _set_last_block(self, last_block):
         self.last_block = last_block
-        with open('last_block', 'wb') as f:
+        with open('data/last_block', 'wb') as f:
             pickle.dump(last_block, f)
 
     """ PUBLIC METHODS BELOW """
