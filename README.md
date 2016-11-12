@@ -7,7 +7,7 @@ sudo apt-get install libffi-dev build-essential python3 python3-pip # or equival
 sudo pip3 install virtualenv # if you dont have it
 virtualenv env
 source env/bin/activate
-pip install flask bigchaindb python-gnupg
+pip install flask==0.11.1 bigchaindb python-gnupg
 cd src/data
 rethinkdb &>/dev/null &
 bigchaindb -y configure
