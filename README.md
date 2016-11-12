@@ -3,7 +3,7 @@ First install rethinkdb: https://rethinkdb.com/docs/install/
 Start in root directory of repository:
 
 ```
-sudo apt-get install libffi-dev build-essential python3 python3-pip # or equivalent for your distro
+sudo apt-get install gnupg libffi-dev build-essential python3 python3-pip # or equivalent for your distro
 sudo pip3 install virtualenv # if you dont have it
 virtualenv env
 source env/bin/activate
