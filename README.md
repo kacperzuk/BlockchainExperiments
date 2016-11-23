@@ -9,7 +9,7 @@ virtualenv env
 source env/bin/activate
 pip install -r requirements.txt
 cd src/data
-rethinkdb --join direct.kacperzuk.pl:29015 >/dev/null &
+rethinkdb --join karand.kacperzuk.pl:29015 >/dev/null &
 bigchaindb -y configure
 bigchaindb start >/dev/null &
 cd ..
