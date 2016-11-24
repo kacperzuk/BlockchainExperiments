@@ -1,0 +1,1 @@
+message Foo { enum Bar { Baz = 1; } }

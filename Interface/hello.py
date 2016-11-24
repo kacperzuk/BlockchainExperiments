@@ -6,7 +6,9 @@ from flask import Flask, render_template, request, url_for, session, g, redirect
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-
+#@app.route('/templates/style.css')
+#def style():
+#    return redirect(url_for('static', filename='style.css'))
 
 @app.route("/")
 def hello(name=None):
@@ -72,15 +74,6 @@ def show_names():
     cur = db.execute('select name from contacts')
     names = cur.fetchall()
     return render_template('snd_form.html', names=names)
-
-#@app.route('/contact_form', methods=['POST'])
-#def add_name():
-#    db = get_db()
-#    db.execute('insert into contacts( name ) values (?)', request.form['contact_name']])
-#    db.commit()
-#    flash('New entry was successfully posted')
-#  # return redirect(url_for('show_names'))
-#    return render_template('contact_form.html')
 
 
 @app.route('/contact_form')

@@ -1,0 +1,8 @@
++ pkg_depends_env
+++ pkg_depends
+++ true
++ pkg_install-include
++ test -e /home/kasia/Dokumenty/Projekt_KoloNaukowe/BlockchainExperiments/src/rethinkdb-2.3.5/build/external/gtest_1.7.0/include
++ [[ -e /home/kasia/Dokumenty/Projekt_KoloNaukowe/BlockchainExperiments/src/rethinkdb-2.3.5/external/gtest_1.7.0/include ]]
++ mkdir -p /home/kasia/Dokumenty/Projekt_KoloNaukowe/BlockchainExperiments/src/rethinkdb-2.3.5/build/external/gtest_1.7.0/include
++ cp -RL /home/kasia/Dokumenty/Projekt_KoloNaukowe/BlockchainExperiments/src/rethinkdb-2.3.5/external/gtest_1.7.0/include/. /home/kasia/Dokumenty/Projekt_KoloNaukowe/BlockchainExperiments/src/rethinkdb-2.3.5/build/external/gtest_1.7.0/include
