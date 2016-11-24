@@ -3,12 +3,15 @@ First install rethinkdb: https://rethinkdb.com/docs/install/
 Start in root directory of repository:
 
 ```
+git submodule update --init
 sudo apt-get install gnupg libffi-dev build-essential python3 python3-pip # or equivalent for your distro
 sudo pip3 install virtualenv # if you dont have it
 virtualenv env
 source env/bin/activate
 pip3 install -r requirements.txt
-cd src/data
+cd bigchaindb/
+python3 setup.py install
+cd ../src/data
 rethinkdb --join karand.kacperzuk.pl:29015 >/dev/null &
 bigchaindb -y configure
 bigchaindb start >/dev/null &

@@ -48,7 +48,7 @@ class MBigchain(Bigchain):
 
         ephemeral_keypair = crypto.generate_key_pair()
 
-        ctx = transaction.Transaction.create([self.me], [ephemeral_keypair[1]], message) 
+        ctx = transaction.Transaction.create([self.me], [([ephemeral_keypair[1]],1)], message) 
         ctx.sign([self.me_private])
         self.write_transaction(ctx)
 
