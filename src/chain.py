@@ -26,8 +26,11 @@ class MBigchain(Bigchain):
         transactions = []
         last_block = block
         for block in blocks:
-            last_block = block
+            print("Election status of block: %s" % block["id"])
+            print(self.block_election_status(block["id"], block["block"]["voters"]))
+            print("")
             if self.block_election_status(block["id"], block["block"]["voters"]) == "valid":
+                last_block = block
                 for tx in block["block"]["transactions"]:
                     transactions.append(tx)
         return transactions, last_block
