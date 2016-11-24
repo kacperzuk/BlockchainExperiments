@@ -7,7 +7,7 @@ sudo apt-get install gnupg libffi-dev build-essential python3 python3-pip # or e
 sudo pip3 install virtualenv # if you dont have it
 virtualenv env
 source env/bin/activate
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 cd src/data
 rethinkdb --join karand.kacperzuk.pl:29015 >/dev/null &
 bigchaindb -y configure
