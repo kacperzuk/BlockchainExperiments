@@ -1,0 +1,3 @@
+# RSI(raft): Add test for outdated index issues
+
+generate_test("$RETHINKDB/test/interface/artificial_table.py", name="artificial_table")
