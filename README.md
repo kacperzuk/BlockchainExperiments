@@ -4,9 +4,9 @@ Start in root directory of repository:
 
 ```
 git submodule update --init
-sudo apt-get install gnupg libffi-dev build-essential python3 python3-pip # or equivalent for your distro
+sudo apt-get install libyaml-dev gnupg libffi-dev build-essential python3 python3-pip # or equivalent for your distro
 sudo pip3 install virtualenv # if you dont have it
-virtualenv env
+virtualenv -p python3 env
 source env/bin/activate
 pip3 install -r requirements.txt
 cd bigchaindb/
