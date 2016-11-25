@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="../static/style.css">
+        <meta charset="UTF-8">
+        <title>main page</title>
+    </head>
+    <body>
+        <div>
+            {% if conversation.their_next_fingerprint %}
+                <form action="{{ url_for('send_message', cid=conversation.id) }}" method='POST'>
+                    <input type="hidden" name="conversation_id" value="{{ conversation.id }}">
+                    Send reply:<br>
+                    <textarea name=text rows=5 cols=40></textarea><br>
+                    <button type='submit'>Send message</button>
+                </form>
+            {% else %}
+                Missing fingerprint of other side. We can't send messages until we receive one.
+            {% endif %}
+        </div>
+        <div>
+            {% for m in messages %}
+            {% if m.incoming %}
+            <p>Message received:</p>
+            {% else %}
+            <p>Message sent:</p>
+            {% endif %}
+            <p>
+            <textarea name=text rows=5 cols=40 disabled="">{{ m.content | safe }}</textarea>
+            </p>
+            <p>Time:
+            <input type="text" name="rcv_name" value="{{ m.datetime }}" disabled>
+            </p>
+            <hr>
+            {% else %}
+            <p>No messages yet.</p>
+            {% endfor %}
+	    {% if conversation.message_count == 0 and not conversation.their_next_fingerprint %}
+            <p>Your one-time key (send it to other party for use in "Start conversation"):</p>
+            <p><textarea style="width: 50%; height: 10rem" readonly>{{ conversation.our_next_pubkey }}</textarea></p>
+            <p>
+	    {% endif %}
+            <form method='GET' action='/'>
+                <button type='submit'>Back to main page</button>
+            </form>
+            </p>
+        </div>
+    </body>
+</html>

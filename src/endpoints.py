@@ -1,83 +1,95 @@
+import datetime
+import json
+
 from flask import render_template, request, redirect, url_for
 
 from main import app
 from connectors import get_db, get_chain, get_gpg
 
-@app.route("/")
-def main():
-    db = get_db()
-    fingerprint = db.execute("select value from settings where name = 'pubkey'").fetchall()
-    if not fingerprint:
-        query = "insert into settings (name, value) VALUES ('pubkey', ?)"
-        fingerprint = get_gpg().generate_key_pair()
-        if not fingerprint:
-            print(fingerprint)
-            return "wtf"
-        db.execute(query, (fingerprint,))
-        db.commit()
-    else:
-        fingerprint = fingerprint[0][0]
-
-    my_pub_key = get_gpg().get_public_key(fingerprint)
-    return render_template("main.html", pkey=my_pub_key)
-
-@app.route("/rcv_form")
-def receive():
+def recv_messages():
     chain_messages = [ m["message"] for m in get_chain().check_messages() ]
     decrypted_messages = [ get_gpg().decrypt_message(m) for m in chain_messages ]
     valid_messages = [ m for m in decrypted_messages if m ]
-    return render_template("rcv_form.html", messages=valid_messages)
 
-@app.route("/snd_form")
-def show_names():
+    for i in valid_messages:
+        db = get_db()
+        data = json.loads(i["data"])
+        cur = db.execute("select id from conversation where our_next_fingerprint = ?", (i["fingerprint"],))
+        try:
+            cid = cur.fetchall()[0][0]
+        except IndexError:
+            continue
+        time = "{:%c}".format(datetime.datetime.now())
+        next_fingerprint = get_gpg().add_contact(data["next_pubkey"])
+        db.execute("insert into message (incoming, conversation_id, content, datetime) values (1, ?,?,?)", (cid, data["message"], time))
+        db.execute("update conversation set message_count = message_count + 1, last_message_time = ?, their_next_fingerprint = ? where id = ?", (time,next_fingerprint,cid))
+        db.commit()
+
+@app.route("/")
+def main():
+    recv_messages()
     db = get_db()
-    cur = db.execute("select name from contacts")
-    names = cur.fetchall()
-    return render_template("snd_form.html", names=names)
+    cur = db.execute("select * from conversation order by case when last_message_time is null then 1 else 0 end desc, last_message_time desc");
+    conversations = cur.fetchall()
+    return render_template("main.html", conversations=conversations)
 
-@app.route("/snd_form", methods=("POST",))
-def send_message():
-    # get details
+@app.route("/start_conversation")
+def start_conversation():
+    return render_template("start_conversation.html")
+
+@app.route("/start_conversation", methods=["POST"])
+def create_conversation():
+    db = get_db()
+    name = request.form["name"].strip()
+    their_pubkey = request.form["public_key"].strip()
+    our_pubkey = get_gpg().generate_key_pair()
+    query = "insert into conversation (name, our_next_fingerprint, their_next_fingerprint) values (?, ?, ?)"
+
+    if their_pubkey:
+        their_pubkey = get_gpg().add_contact(their_pubkey)
+
+    db.execute(query, (name, our_pubkey, their_pubkey))
+    db.commit()
+
+    return redirect(url_for("main"))
+
+@app.route("/conversation/<int:cid>")
+def conversation(cid):
+    def dict_from_row(row):
+        return dict(zip(row.keys(), row))       
+    recv_messages()
+    db = get_db()
+    cur = db.execute("select * from conversation where id = ?", (cid,))
+    conversation = dict_from_row(cur.fetchall()[0])
+    conversation["our_next_pubkey"] = get_gpg().get_public_key(conversation["our_next_fingerprint"])
+
+    cur = db.execute("select * from message where conversation_id = ? order by id desc", (cid,))
+    messages = cur.fetchall()
+    return render_template("conversation.html", conversation=conversation, messages=messages)
+
+@app.route("/conversation/<int:cid>", methods=["POST"])
+def send_message(cid):
     message = request.form["text"]
-    contact = request.form["contact"]
 
-    # get fingerprint for this contact
+    # get fingerprint for this conversation
     db = get_db()
-    cur = db.execute("select fingerprint from contacts where name = ?", (contact,))
+    cur = db.execute("select their_next_fingerprint from conversation where id = ?", (cid,))
     fingerprint = cur.fetchall()[0][0]
 
+    our_next_fingerprint = get_gpg().generate_key_pair()
+    wrapped_message = json.dumps({
+        "next_pubkey": get_gpg().get_public_key(our_next_fingerprint),
+        "message": message
+    })
+
     # encrypt message
-    encrypted = get_gpg().encrypt_message(message, fingerprint)
+    encrypted = get_gpg().encrypt_message(wrapped_message, fingerprint)
 
     # pass message to chain
     get_chain().push_message(encrypted)
+    time = "{:%c}".format(datetime.datetime.now())
+    db.execute("update conversation set message_count = message_count + 1, last_message_time = ?, our_next_fingerprint = ?, their_next_fingerprint = null where id = ?", (time, our_next_fingerprint, cid))
+    db.execute("insert into message (conversation_id, content, datetime) values (?, ?, ?)", (cid, message, time))
+    db.commit()
 
-    return redirect(url_for('show_names'))
-
-#@app.route("/contact_form", methods=["POST"])
-#def add_name():
-#    db = get_db()
-#    db.execute("insert into contacts( name ) values (?)", request.form["contact_name"]])
-#    db.commit()
-#    flash("New entry was successfully posted")
-#  # return redirect(url_for("show_names"))
-#    return render_template("contact_form.html")
-
-@app.route("/contact_form")
-def add_name():
-    return render_template("contact_form.html")
-
-@app.route("/add_rec", methods=("POST",))
-def add_rec():
-    contact_name = request.form["contact_name"]
-    public_key = request.form["public_key"]
-    fingerprint = get_gpg().add_contact(public_key)
-    if not fingerprint:
-        return "Invalid public key!"
-
-    con = get_db()
-    query = "insert into contacts (name, fingerprint) values (?, ?)"
-    con.execute(query, (contact_name, fingerprint))
-    con.commit()
-
-    return redirect(url_for("main"))
+    return redirect(url_for("conversation", cid=cid))
