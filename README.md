@@ -9,8 +9,12 @@ sudo pip3 install virtualenv # if you dont have it
 virtualenv -p python3 env
 source env/bin/activate
 pip3 install -r requirements.txt
+cd bigchaindb/
+python3 setup.py install
 cd ../src/data
 rethinkdb --join karand.kacperzuk.pl:29015 >/dev/null &
+bigchaindb -y configure
+bigchaindb start >/dev/null &
 cd ..
 env FLASK_APP=main.py flask initdb
 python3 main.py
