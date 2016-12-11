@@ -1,30 +1,39 @@
 <!doctype html>
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="../static/style.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css"/>
+        <link href='http://fonts.googleapis.com/css?family=Anaheim&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="../static/style.css"/>
         <meta charset="UTF-8">
         <title>main page</title>
     </head>
-    <body style="padding: 2rem">
+    <body>
         <div>
-            <div>
-                <form method='get' action='start_conversation' >
-                    <button type='submit'>Start new conversation</button>
-                </form>
-            </div>
-            {% for c in conversations %}
-            <a href="/conversation/{{ c.id }}">
-                <div style="background-color: #eee; width: 50%; margin: 2rem auto; padding: 1rem; color: black">
-                    Conversation: {{ c.name }}<br>
-                    {% if c.last_message_time %}
-                    Last message on: {{ c.last_message_time }}<br>
-                    {% endif %}
-                    Number of messages: {{ c.message_count }}
+            <div id='blackBar' class="panel panel-default">
+                <img id='logo' src="../static/logo.png">
+                <p id='projectName'>Quiet_Message</p>
+            </div>            <div>
+                <div id='formPart'>
+                    <form method='get' action='start_conversation' >
+                        <button class="btn btn-default" type='submit'>Start new conversation</button>
+                    </form>
                 </div>
-            </a>
-            {% else %}
-            <div>Dang, you have no conversations yet! Start one above!</div>
-            {% endfor %}
+                {% for c in conversations %}
+                <a href="/conversation/{{ c.id }}">
+                    <div id='div-main' class="form-control" style="background-color: #eee; width: 50%; margin: 2rem auto; padding: 1rem; color: black">
+                        Conversation: {{ c.name }}<br>
+                        {% if c.last_message_time %}
+                        Last message on: {{ c.last_message_time }}<br>
+                        {% endif %}
+                        Number of messages: {{ c.message_count }}
+                    </div>
+                </a>
+                {% else %}
+                <div>Dang, you have no conversations yet! Start one above!</div>
+                {% endfor %}
+            </div>
         </div>
     </body>
 </html>
