@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="../static/style.css">
+        <meta charset="UTF-8">
+        <title>main page</title>
+    </head>
+    <body>
+        <div>
+            <form action="{{ url_for('start_conversation') }}" method='POST'>
+                <p>
+                <label>Conversation name:<br>
+                        <input type="text" name="name" required>
+                    </label>
+                </p>
+                <p>
+                <label>Public key of your friend (leave empty if you're starting as first one):<br>
+                        <textarea name="public_key" style="width: 50%; height: 10rem"></textarea>
+                    </label>
+                </p>
+                <p>
+                    <button type='submit'>Start conversation</button>
+                </p>
+            </form>
+        </div>
+    </body>
+</html>
