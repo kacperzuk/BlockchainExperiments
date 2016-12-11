@@ -2,3 +2,4 @@
 rethinkdb_data/
 src/data/
 __pycache__/
+env/

@@ -1,4 +1,0 @@
-./mk/gen/check_openssl.cc:3:25: fatal error: openssl/evp.h: Nie ma takiego pliku ani katalogu
- #include <openssl/evp.h>
-                         ^
-compilation terminated.

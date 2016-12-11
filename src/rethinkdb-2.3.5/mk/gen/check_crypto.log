@@ -1,2 +1,0 @@
-/usr/bin/ld: cannot find -lcrypto
-collect2: error: ld returned 1 exit status
