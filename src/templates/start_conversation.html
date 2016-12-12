@@ -1,27 +1,37 @@
 <!doctype html>
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="../static/style.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css"/>
+        <link href='http://fonts.googleapis.com/css?family=Anaheim&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="../static/style.css"/>
         <meta charset="UTF-8">
         <title>main page</title>
     </head>
     <body>
         <div>
-            <form action="{{ url_for('start_conversation') }}" method='POST'>
-                <p>
-                <label>Conversation name:<br>
-                        <input type="text" name="name" required>
-                    </label>
-                </p>
-                <p>
-                <label>Public key of your friend (leave empty if you're starting as first one):<br>
-                        <textarea name="public_key" style="width: 50%; height: 10rem"></textarea>
-                    </label>
-                </p>
-                <p>
-                    <button type='submit'>Start conversation</button>
-                </p>
-            </form>
+            <div id='blackBar' class="panel panel-default">
+                <img id='logo' src="../static/logo.png">
+                <p id='projectName'>Quiet_Message</p>
+            </div>
+            <div id='formPart'>
+                <form action="{{ url_for('start_conversation') }}" method='POST'>
+                    <p>
+                        <label>Conversation name:<br>
+                            <input type="text" name="name" class="form-control" required>
+                        </label>
+                    </p>
+                    <p>
+                        <label>Public key of your friend (leave empty if you're starting as first one):<br>
+                            <textarea name="public_key" class="form-control"></textarea>
+                        </label>
+                    </p>
+                    <p>
+                        <button type='submit' class="btn btn-default">Start conversation</button>
+                    </p>
+                </form>
+                </div>
         </div>
     </body>
 </html>
