@@ -22,7 +22,7 @@
                 </div>
                 {% for c in conversations %}
                 <a href="/conversation/{{ c.id }}">
-                    <div id='div-main' class="form-control" style="background-color: #eee; width: 50%; margin: 2rem auto; padding: 1rem; color: black">
+                    <div id='div-main' style="background-color: #eee; width: 50%; margin: 2rem auto; padding: 1rem; color: black">
                         Conversation: {{ c.name }}<br>
                         {% if c.last_message_time %}
                         Last message on: {{ c.last_message_time }}<br>

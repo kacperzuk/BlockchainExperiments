@@ -15,19 +15,19 @@
                 <img id='logo' src="../static/logo.png">
                 <p id='projectName'>Quiet_Message</p>
             </div>
-            <div id='formPart'>
+            <div id='formPart' style="margin: 0 auto; width: 80%">
                 {% if conversation.their_next_fingerprint %}
                     <form action="{{ url_for('send_message', cid=conversation.id) }}" method='POST'>
                         <input class="form-control" type="hidden" name="conversation_id" value="{{ conversation.id }}">
                         Send reply:<br>
-                        <textarea name=text rows=5 cols=40></textarea><br>
+                        <textarea name=text rows=5 cols=40 class="form-control"></textarea><br>
                         <button class="btn btn-default" type='submit'>Send message</button>
                     </form>
                 {% else %}
                     Missing fingerprint of other side. We can't send messages until we receive one.
                 {% endif %}
             </div>
-            <div>
+            <div style="margin: 0 auto; width: 80%">
                 {% for m in messages %}
                 {% if m.incoming %}
                 <p>Message received:</p>
@@ -35,7 +35,7 @@
                 <p>Message sent:</p>
                 {% endif %}
                 <p>
-                <textarea name=text rows=5 cols=40 disabled="">{{ m.content | safe }}</textarea>
+                <textarea name=text rows=5 cols=40 class="form-control" disabled="">{{ m.content | safe }}</textarea>
                 </p>
                 <p>Time:
                 <input class="form-control" type="text" name="rcv_name" value="{{ m.datetime }}" disabled>
